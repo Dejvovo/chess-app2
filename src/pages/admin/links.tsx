@@ -13,7 +13,7 @@ const defaultColumns = (objects: object[]) => objects[0] ? Object.keys(objects[0
 
 const Links = ()=>  {
     const { enqueueSnackbar } = useSnackbar();
-    const refreshAllLinks = api.chesscz.refreshAllLinks.useQuery([], {enabled: false});
+    const refreshAllLinks = api.chesscz.refreshAllLinks.useQuery(undefined, {enabled: false});
     const saveGamesFromUrl = api.chesscz.saveGamesFromUrl.useMutation();
     
     const refreshLinksInDb = () => {
