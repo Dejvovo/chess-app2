@@ -23,7 +23,11 @@ export const chessczRouter = createTRPCRouter({
     .query(async () => {
       for await(const linksChunk of loadAllLinksByChunks()) {
         const pgnLinksOnly = linksChunk.filter(l => l.url.endsWith('pgn')).map(l => ({...l, url:l.url.trim()}));
-        await prisma.link.createMany({data: pgnLinksOnly, skipDuplicates: true});
+        try{
+          await prisma.link.createMany({data: pgnLinksOnly, skipDuplicates: true});
+        } catch(e) {
+          console.log('Error', JSON.stringify(e));
+        }
       }
     }),
   saveGamesFromUrl: publicProcedure
