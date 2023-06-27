@@ -51,3 +51,9 @@ model Pgn {
     plyCount   Int?
     eventDate  DateTime?
 }
+
+model Link {
+    id   Int    @id @default(autoincrement())
+    url  String
+    date String
+}

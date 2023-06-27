@@ -7,6 +7,7 @@ import { api } from "~/utils/api";
 
 
 export default function Home() {
+  
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const pgns = api.db.pgns.useQuery().data || [];
