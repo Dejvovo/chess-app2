@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+import { Button, Table } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import { api } from "~/utils/api";
+
 
 export default function Home() {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -9,8 +13,8 @@ export default function Home() {
   const pgns = api.db.pgns.useQuery().data || [];
   return (
     <>
-    hello world
-    {pgns.map(pgn => <div key={pgn.black}>{pgn.black}</div>)}
+
+    <DataGrid rows={pgns} columns={pgns[0] ? Object.keys(pgns[0]).map(key => ({field: key})): []}></DataGrid>
     </>
   );
 }
