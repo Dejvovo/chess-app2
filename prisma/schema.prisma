@@ -11,8 +11,43 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Player {
+    id           Int    @id @default(autoincrement())
+    clubUrl      String
+    club         String
+    name         String
+    born         Int
+    VT           String
+    localNumber  Int
+    elo          Int
+    eloRapid     Int
+    fideNumber   String
+    fideElo      Int
+    fideRapid    Int
+    fideBlitz    Int
+    registration String
+    actualized   String
+    referee      String
+    trainer      String
+    fee          String
+}
+
+model Pgn {
+    id         Int       @id @default(autoincrement())
+    sourceDate DateTime?
+    sourceUrl  String?
+    pgn        String?
+    moves      String?
+    event      String?
+    site       String?
+    date       DateTime?
+    round      String?
+    result     String?
+    white      String?
+    black      String?
+    eco        String?
+    whiteElo   Int?
+    blackElo   Int?
+    plyCount   Int?
+    eventDate  DateTime?
 }
