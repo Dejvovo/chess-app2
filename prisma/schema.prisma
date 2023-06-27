@@ -37,23 +37,27 @@ model Pgn {
     sourceDate DateTime?
     sourceUrl  String?
     pgn        String?
-    moves      String?
+    moves      String
     event      String?
     site       String?
     date       DateTime?
     round      String?
     result     String?
-    white      String?
-    black      String?
+    white      String
+    black      String
     eco        String?
     whiteElo   Int?
     blackElo   Int?
     plyCount   Int?
     eventDate  DateTime?
+
+    @@unique([white, black, moves], name: "pgnKey")
 }
 
 model Link {
     id   Int    @id @default(autoincrement())
     url  String
     date String
+
+    @@unique([url])
 }

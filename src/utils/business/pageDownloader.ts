@@ -5,7 +5,7 @@
 import axios from 'axios';
 
 
-export const downloadPage = async (url: string) => {
+export const downloadPageOrFile = async (url: string) => {
     const body = await axios<string>(url, { timeout: 4000 });
     return body.data;
 }

@@ -97,7 +97,7 @@ export async function* loadAllLinksByChunks(baseUrl= 'https://db2.chess.cz', top
         console.log(`Processed ${processedLinks} out of ${allLinks}`);
         processedLinks++;
 
-        const bottomlinks = await loadLinks(baseUrl + topDirLink.url);
+        const bottomlinks = (await loadLinks(baseUrl + topDirLink.url)).map(l => ({...l, url:`${baseUrl}${l.url}`}));
         yield bottomlinks;
         console.log("Chunk of bottom links loaded.", bottomlinks.length);
         bottomDirLinks = [...bottomDirLinks, ...bottomlinks]; 

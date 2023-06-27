@@ -5,8 +5,8 @@ export interface IPgn {
     date?: Date;
     round?: string;
     result?: string;
-    white?: string;
-    black?: string;
+    white: string;
+    black: string;
     eco?: string;
     whiteElo?: number;
     blackElo?: number;
