@@ -5,8 +5,6 @@ import { csCZ as materialCsCz} from '@mui/material/locale';
 import {  csCZ as dataGridCsCz} from '@mui/x-data-grid';
 import { SnackbarProvider } from 'notistack';
 
-
-
 const theme = createTheme(
   {
     palette: {
@@ -16,6 +14,7 @@ const theme = createTheme(
   materialCsCz,
   dataGridCsCz
 );
+
 const MyApp: AppType = ({ Component, pageProps }) => {
   return <ThemeProvider theme={theme}><SnackbarProvider><Component {...pageProps} /></SnackbarProvider></ThemeProvider>;
 };
