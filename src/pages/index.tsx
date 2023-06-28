@@ -23,7 +23,7 @@ interface IInput {
 
 export default function Home() {
   const [rowCount, setRowCount] = useState<number>();
-  const [rows, setRows] = useState<typeof data.result>([]);
+  const [rows, setRows] = useState<typeof pgns>([]);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 25});
 
   const { data, isLoading } = api.db.infinitePgns.useQuery({pagination: paginationModel});
