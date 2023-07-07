@@ -21,48 +21,45 @@ interface IInput {
   filters?: GridFilterModel
 }
 
-export default function Home() {
-  const [rowCount, setRowCount] = useState<number>();
-  const [rows, setRows] = useState<typeof pgns>([]);
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 25});
 
-  const { data, isLoading } = api.db.infinitePgns.useQuery({pagination: paginationModel});
+export default function Home() {
+  const emptyPgn = (id: number): (typeof pgns)[0] => ({black: '', blackElo: 0, date: null, eco: '', event: '',eventDate: null, id: id, moves: '', pgn: '', plyCount: null, result: '', round: '', site: '', sourceDate: null,sourceUrl: null, white: '', whiteElo: null});
+  const emptyPgns = () => [...Array(25).keys()].map(k => emptyPgn(k));
+
+  const [rowCount, setRowCount] = useState<number>();
+  const [rows, setRows] = useState<typeof pgns>(emptyPgns());
+
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 25});
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
+
+  const { data, isLoading } = api.db.infinitePgns.useQuery({pagination: paginationModel, filter: filterModel});
 
   const pgns = data?.result || [];
   
   useEffect(() => {
     setRowCount((prev) => data?.count ? data.count : prev);
     setRows((prev) => data?.result ? data.result : prev);
-
   }, [data?.count, data?.result]);
 
   return (
     <>
 
       <DataGrid 
+        loading={isLoading}
+        density={'compact'} 
 
         rows={rows} 
+        rowCount={rowCount}
 
         paginationMode={'server'}
         paginationModel={paginationModel}
-        onPaginationModelChange={(model) => {setPaginationModel(model); console.log(model)}}
-        rowCount={rowCount}
+        onPaginationModelChange={(model) => {setPaginationModel(model)}}
         
-        loading={isLoading}
-        density={'compact'} 
+      
         filterMode={'server'}
+        filterModel={filterModel}
+        onFilterModelChange={(model) => {model.items.length != 0 ? setFilterModel(model) : undefined;}}
         columns={pgns[0] ? Object.keys(pgns[0]).map(key => ({field: key})): []}></DataGrid>
     </>
   );
 }
-
-// .input(z.object({
-//   skip: z.number().min(0),
-//   take: z.number().min(1).max(100),
-//   filters: z.object({
-//     white: z.object({
-//       operator: z.string(),
-//       value: z.string().nullish()
-//     }).nullish()
-//   })
-// }))

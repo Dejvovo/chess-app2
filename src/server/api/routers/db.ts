@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -23,24 +24,30 @@ export const dbRouter = createTRPCRouter({
       return await ctx.prisma.pgn.findMany();
     }),
   infinitePgns: publicProcedure 
-  .input(z.object({
-    pagination: z.object({
-      page: z.number().min(0),
-      pageSize: z.number().min(1).max(100),
-    }).nullish()
-
-    // filters: z.object({
-    //   white: z.object({
-    //     operator: z.string(),
-    //     value: z.string().nullish()
-    //   }).nullish()
-    // })
-  }))
+  .input(
+    z.object({
+      pagination: z.object({
+        page: z.number().min(0),
+        pageSize: z.number().min(1).max(100)}).nullish(),
+      filter: z.object({
+          items: z.array(z.object({
+            field: z.string(),
+            operator: z.string(),
+            id: z.any(),
+            value: z.string().nullish(),
+          })),
+      }).nullish()
+    })
+    )
   .query(async ({ctx, input}) => {
     const count = await ctx.prisma.pgn.count();
+
+    const inputFilter = (input.filter!.items[0] && input.filter!.items[0].value !== undefined) ? input.filter!.items[0] : undefined;
+
     const result = await ctx.prisma.pgn.findMany({  
       take: input.pagination?.pageSize,
       skip: input.pagination ? input.pagination?.page * input.pagination?.pageSize : 0,
+      where: inputFilter && {OR: [{[inputFilter.field]: {contains: inputFilter.value}}]}
     });
     return {count, result};
   })
