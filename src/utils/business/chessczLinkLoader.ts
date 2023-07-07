@@ -29,12 +29,27 @@ interface ILink {
 
 const logDev = (message:string) => {if(process.env.NODE_ENV === 'development') console.log(message)};
 
+const fetchForSure = async (url: string) => {
+    for(let i = 0; i< 10; i++) {
+        try{
+            const fetched = await (fetch(url));
+            return fetched;
+        }
+        catch(e) {
+            console.log('Loading was not successful, trying again...', e);
+        }
+        await sleep(1000);
+    }
+};
+
 export const loadHtml = async (url: string) => {
-    const mainSiteStream = await (fetch(url));
     logDev(url);
+    const mainSiteStream = await (fetchForSure(url));
+    if(!mainSiteStream) return '';
+    
     const mainSiteHtml = await (mainSiteStream).text();
-    logDev('MainSite');
-    logDev(mainSiteHtml)
+    // logDev('MainSite');
+    // logDev(mainSiteHtml)
     const htmlPrepared = mainSiteHtml.toLowerCase().replaceAll('&lt;dir&gt;', '');
     return htmlPrepared;
 }

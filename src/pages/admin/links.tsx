@@ -14,16 +14,25 @@ const defaultColumns = (objects: object[]) => objects[0] ? Object.keys(objects[0
 const Links = ()=>  {
     const { enqueueSnackbar } = useSnackbar();
     const refreshAllLinks = api.chesscz.refreshAllLinks.useQuery(undefined, {enabled: false});
+    // const pushGamesFromLinksToDB = api.chesscz.pushGamesFromLinksToDB.useQuery(undefined, {enabled: false});
     const saveGamesFromUrl = api.chesscz.saveGamesFromUrl.useMutation();
     
     const refreshLinksInDb = () => {
         enqueueSnackbar('Linky v DB se nyní přegenerují, tato akce chvíli potrvá. Mačkejte mezitím f5');
         refreshAllLinks.refetch();
     }
+    // const pushGamesFromLin-ksToDB = () => {
+    //     enqueueSnackbar('Partie se nyní nahrávají do DB mačkejte mezitím f5');
+    //     refreshAllLinks.refetch();
+    // }
+
+
     const links = api.chesscz.links.useQuery().data || [];
 
     return <>
         <Button variant={'contained'} onClick={refreshLinksInDb}>Přegenerovat linky v DB</Button>
+        {/* <Button variant={'contained'} onClick={pushGamesFromLinksToDB}>Nasypat všechny linky do DB</Button> */}
+        <br/>
         <Table size={'small'}>
             <TableHead>
                 <TableRow>
