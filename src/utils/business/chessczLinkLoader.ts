@@ -116,9 +116,8 @@ export async function* loadAllLinksByChunks(baseUrl= 'https://db2.chess.cz', top
         yield bottomlinks;
         console.log("Chunk of bottom links loaded.", bottomlinks.length);
         bottomDirLinks = [...bottomDirLinks, ...bottomlinks]; 
-        await sleep(1000);
     }
-    console.log("All chunks loaded.");
+    console.log("All chunks loaded.");  
     return bottomDirLinks;
 }
 

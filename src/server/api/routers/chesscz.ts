@@ -43,5 +43,28 @@ export const chessczRouter = createTRPCRouter({
       throw e;
     }
   }),
+  pushGamesFromLinksToDB: publicProcedure
+  .mutation(async() => {
+    try{
+      const allLinks = await prisma.link.findMany();
 
+      let linksParsed = 0
+      for(const link of allLinks) {
+        try{ 
+          const file = await downloadPageOrFile(link.url);
+          const parsedPgns = parsePgnFile(file).map(pgn => ({...pgn, sourceUrl: link.url}));
+          await prisma.pgn.createMany({data: parsedPgns,  skipDuplicates: true});
+  
+        } catch(e) {
+          console.log('Something bad happenned', e);
+        }
+        console.log(`Parsed ${linksParsed} links out of ${allLinks.length}`);
+        linksParsed++;
+      }
+      return 'Everything was successfull';
+    }catch(e) {
+      console.log("ERROR", JSON.stringify(e));
+      throw e;
+    }
+  }),
 });

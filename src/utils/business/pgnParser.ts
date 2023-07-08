@@ -75,7 +75,6 @@ const getMoves = (pgn: string) => {
 }
 
 export const parseSinglePgn = (pgn: string): IPgn => {
-    console.log('getPlyCount(pgn):', getPlyCount(pgn))
     return {
         moves: getMoves(pgn),
         blackElo: getBlackElo(pgn) ? Number(getBlackElo(pgn)) : undefined,
