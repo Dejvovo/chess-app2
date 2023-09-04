@@ -40,15 +40,16 @@ export const dbRouter = createTRPCRouter({
     })
     )
   .query(async ({ctx, input}) => {
-    const count = await ctx.prisma.pgn.count();
+    const inputFilter = (input.filter?.items.map(item => ({[item.field]: {contains: item.value, mode: 'insensitive'}})));
+    const whereFilter = inputFilter && {OR: inputFilter }; 
+    const count = await ctx.prisma.pgn.count({where: whereFilter, select: {_all: true}});
 
-    const inputFilter = (input.filter!.items[0] && input.filter!.items[0].value !== undefined) ? input.filter!.items[0] : undefined;
-
+    console.log("count", count)
     const result = await ctx.prisma.pgn.findMany({  
       take: input.pagination?.pageSize,
       skip: input.pagination ? input.pagination?.page * input.pagination?.pageSize : 0,
-      where: inputFilter && {OR: [{[inputFilter.field]: {contains: inputFilter.value}}]}
+      where: whereFilter,
     });
-    return {count, result};
+    return {count: count._all, result};
   })
 });
