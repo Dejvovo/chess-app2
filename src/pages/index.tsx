@@ -24,14 +24,14 @@ const gameIframe = (pgn?: string ) => `<html><head>   <link rel="stylesheet" typ
 </head><body><div class="cbreplay">${pgn || ''}</div></body></html>`;
 
 export default function Home() {
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 10});
   const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
   const [activeGame, setActiveGame] = useState<string | undefined>(undefined);
 
   type TableColumn = { dataIndex: string, title: string, width?: string, render?: (_: any, data: any) => React.JSX.Element };
   const whiteColumn: TableColumn = {title: 'Bílý', dataIndex: 'white', width: '20%'};
   const blackColumn: TableColumn = {title: 'Černý', dataIndex: 'black', width: '20%'};
-  const resultColumn: TableColumn = {title: 'Výsledek', dataIndex: 'result', width: '5%'};
+  const resultColumn: TableColumn = {title: 'Výsledek', dataIndex: 'result', width: '5%', render: (_, data) => <>{data?.result.length > 10 ? (data?.result as string).substring(0, 10) + '...' : data?.result }</>};
   const dateColumn: TableColumn = {title: 'Datum', dataIndex: 'date', width: '15%', render: (_, data) => <>{data?.date?.toLocaleString()}</>};
   const linkColumn: TableColumn = {title: 'Přehrát', dataIndex: 'pgn', width: '15%', render: (_, data) =>  (<><Button disabled={data.result.length > 10} onClick={() => setActiveGame(data.pgn)}>Přehrát</Button></>) };
 
@@ -68,7 +68,7 @@ export default function Home() {
 
         <Drawer placement="right" open={activeGame !== undefined} closable={true} onClose={() => setActiveGame(undefined)} width={'80%'}>
         <iframe title={"ad"}
-                style={{ width: '100%', height: '80%' }}
+                style={{ width: '100%', height: '100%' }}
                 srcDoc={gameIframe(activeGame)}></iframe> 
         </Drawer>
       </Content>
