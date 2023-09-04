@@ -18,30 +18,30 @@ const siderStyle: React.CSSProperties = {
   backgroundColor: '#fff',
 };
 
+const gameIframe = (pgn?: string ) => `<html><head>   <link rel="stylesheet" type="text/css" href="https://pgn.chessbase.com/CBReplay.css" />
+<script src="https://pgn.chessbase.com/jquery-3.0.0.min.js"></script>
+<script src="https://pgn.chessbase.com/cbreplay.js" type="text/javascript"></script>
+</head><body><div class="cbreplay">${pgn || ''}</div></body></html>`;
+
 export default function Home() {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 5});
   const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
   const [activeGame, setActiveGame] = useState<string | undefined>(undefined);
 
   type TableColumn = { dataIndex: string, title: string, width?: string, render?: (_: any, data: any) => React.JSX.Element };
-  const whiteColumn: TableColumn = {title: 'Bily', dataIndex: 'white', width: '20%'};
-  const blackColumn: TableColumn = {title: 'Cerny', dataIndex: 'black', width: '20%'};
-  const resultColumn: TableColumn = {title: 'Vysledek', dataIndex: 'result'};
+  const whiteColumn: TableColumn = {title: 'Bílý', dataIndex: 'white', width: '20%'};
+  const blackColumn: TableColumn = {title: 'Černý', dataIndex: 'black', width: '20%'};
+  const resultColumn: TableColumn = {title: 'Výsledek', dataIndex: 'result', width: '5%'};
+  const dateColumn: TableColumn = {title: 'Datum', dataIndex: 'date', width: '15%', render: (_, data) => <>{data?.date?.toLocaleString()}</>};
   const linkColumn: TableColumn = {title: 'Přehrát', dataIndex: 'pgn', width: '15%', render: (_, data) =>  (<><Button disabled={data.result.length > 10} onClick={() => setActiveGame(data.pgn)}>Přehrát</Button></>) };
 
   const { data, isLoading } = api.db.infinitePgns.useQuery({pagination: paginationModel, filter: filterModel});
-
   const onPaginationChange = (page: number, pageSize: number) => setPaginationModel({page: page -1, pageSize}) 
   const onFormFinish = (data: {name: string}) => {
-    setFilterModel((prev) => {
+    setFilterModel((_) => {
       return {items: [{field: 'white', value: data.name, operator: 'OR' }, {field: 'black', value: data.name, operator: 'OR' }]} 
     });
   };  
-
-  // useEffect(() => {
-  //   // setRowCount((prev) => data?.count ? data.count : prev);
-  //   // setRows((prev) => data?.result ? data.result : prev);
-  // }, [data?.count, data?.result]);
 
   return (
     <>
@@ -59,7 +59,7 @@ export default function Home() {
       <Content>
         <Table 
           loading={isLoading}
-          columns={[whiteColumn, blackColumn, resultColumn, linkColumn]} 
+          columns={[whiteColumn, blackColumn, resultColumn, dateColumn, linkColumn]} 
           dataSource={data?.result}
           pagination={false}
           >
@@ -69,10 +69,7 @@ export default function Home() {
         <Drawer placement="right" open={activeGame !== undefined} closable={true} onClose={() => setActiveGame(undefined)} width={'80%'}>
         <iframe title={"ad"}
                 style={{ width: '100%', height: '80%' }}
-                srcDoc={`<html><head>   <link rel="stylesheet" type="text/css" href="https://pgn.chessbase.com/CBReplay.css" />
-        <script src="https://pgn.chessbase.com/jquery-3.0.0.min.js"></script>
-    <script src="https://pgn.chessbase.com/cbreplay.js" type="text/javascript"></script>
-  </head><body><div class="cbreplay">${activeGame || ''}</div></body></html>`}></iframe> 
+                srcDoc={gameIframe(activeGame)}></iframe> 
         </Drawer>
       </Content>
     </Layout>

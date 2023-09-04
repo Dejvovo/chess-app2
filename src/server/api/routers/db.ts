@@ -49,6 +49,7 @@ export const dbRouter = createTRPCRouter({
       take: input.pagination?.pageSize,
       skip: input.pagination ? input.pagination?.page * input.pagination?.pageSize : 0,
       where: whereFilter,
+      orderBy: {date: {sort: 'desc', nulls: 'last'}}
     });
     return {count: count._all, result};
   })
