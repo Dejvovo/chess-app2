@@ -13,7 +13,7 @@ export const chessczRouter = createTRPCRouter({
   links: publicProcedure
   .query(async () => {
     const links = (await prisma.link.findMany()).map(l => l.url);
-    const linksWithMetadata = await Promise.all(links.map(async (link) => {
+    const linksWithMetadata = await Promise.all(links.map((link) => {
       // const isLinkParsed = await prisma.pgn.findFirst({where: {sourceUrl: {equals: link}}});
       return ({url: link, isParsed: false});
     }));
