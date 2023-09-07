@@ -104,10 +104,11 @@ export const parsePgnFile = (pgnFile: string): IPgn[] => {
     while (true) {
         // console.log("Rest length: ", rest.length);
         numberOfIterations++;
-        if (numberOfIterations > 1000) throw new Error(`Number of iterations exceeded. Restfile is: ${rest}`);
+        if (numberOfIterations > 10000) throw new Error(`Number of iterations exceeded. Restfile is: ${rest}`);
         if (rest === '' || rest.length === 0) break;
 
-        const regex = new RegExp('((0-1)[^"]|(1-0)[^"]|(-1\/2)[^"]|0-1(\s)*$|1-0(\s)*$|-1\/2(\s)*$)', 'g');
+        // TODO select * from "Pgn" where moves not like '1%'; seznam souboru ktere se spatne naparsovaly
+        const regex = new RegExp('((0-1)[^"]|(1-0)[^"]|(-1\/2)[^"]|\\*[^"]|0-1(\s)*$|1-0(\s)*$|-1\/2(\s)*$|\\*(\s)*$)', 'g');
         regex.test(rest);
 
         const startIdxOfMoves = regex.lastIndex;
