@@ -54,6 +54,20 @@ model Pgn {
     @@unique([white, black, moves], name: "pgnKey")
 }
 
+model Group {
+    id       Int    @id @default(autoincrement())
+    code     Int
+    name     String
+    locality String
+    www      String
+    email    String
+    players  String
+    contact  String
+    urlId  Int
+
+    @@unique([code], name: "groupKey")
+}
+
 model Link {
     id   Int    @id @default(autoincrement())
     url  String

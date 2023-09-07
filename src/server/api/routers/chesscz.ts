@@ -6,6 +6,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
 import {  loadAllLinksByChunks } from "~/utils/business/chessczLinkLoader";
+import { loadAllGroups } from "~/utils/business/groupsLoader";
 import { downloadPageOrFile } from "~/utils/business/pageDownloader";
 import { parsePgnFile } from "~/utils/business/pgnParser";
 
@@ -29,6 +30,19 @@ export const chessczRouter = createTRPCRouter({
           console.log('Error', JSON.stringify(e));
         }
       }
+    }),
+  refreshAllGroups: publicProcedure
+    .query(async () => {
+      console.log('Starting to load groups from web');
+      const allGroups = await loadAllGroups();
+
+      console.log('Deleting old groups');
+      await prisma.group.deleteMany({where: {id: {gt: -1}}});
+
+      console.log(`Inserting ${allGroups.length} groups`);
+      await prisma.group.createMany({data: allGroups, skipDuplicates: true} );
+      
+      console.log('Refresh was successful');
     }),
   saveGamesFromUrl: publicProcedure
   .input(z.object({url: z.string()}))

@@ -14,6 +14,8 @@ const defaultColumns = (objects: object[]) => objects[0] ? Object.keys(objects[0
 const Links = ()=>  {
     const { enqueueSnackbar } = useSnackbar();
     const refreshAllLinks = api.chesscz.refreshAllLinks.useQuery(undefined, {enabled: false});
+    const refreshAllGroups = api.chesscz.refreshAllGroups.useQuery(undefined, {enabled: false});
+
     const pushGamesFromLinksToDB = api.chesscz.pushGamesFromLinksToDB.useMutation();
     const saveGamesFromUrl = api.chesscz.saveGamesFromUrl.useMutation();
     
@@ -21,6 +23,12 @@ const Links = ()=>  {
         enqueueSnackbar('Linky v DB se nyní přegenerují, tato akce chvíli potrvá. Mačkejte mezitím f5');
         refreshAllLinks.refetch();
     }
+
+    const refreshGroupsInDb = () => {
+        enqueueSnackbar('Nyní se přegenerují všechny oddíly v DB');
+        refreshAllGroups.refetch();
+    }
+
     const callPushGamesFromLinksToDB = () => {
         enqueueSnackbar('Partie se nyní nahrávají do DB mačkejte mezitím f5');
         pushGamesFromLinksToDB.mutate();
@@ -32,6 +40,8 @@ const Links = ()=>  {
     return <>
         <Button variant={'contained'} onClick={refreshLinksInDb}>Přegenerovat linky v DB</Button>
         <Button variant={'contained'} onClick={callPushGamesFromLinksToDB}>Nasypat všechny hry z linku do DB</Button>
+        <Button variant={'contained'} onClick={refreshGroupsInDb}>Přegenerovat oddíly v DB</Button>
+
         <br/>
         <Table size={'small'}>
             <TableHead>

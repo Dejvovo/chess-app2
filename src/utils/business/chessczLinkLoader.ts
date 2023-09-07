@@ -48,8 +48,6 @@ export const loadHtml = async (url: string) => {
     if(!mainSiteStream) return '';
     
     const mainSiteHtml = await (mainSiteStream).text();
-    // logDev('MainSite');
-    // logDev(mainSiteHtml)
     const htmlPrepared = mainSiteHtml.toLowerCase().replaceAll('&lt;dir&gt;', '');
     return htmlPrepared;
 }
@@ -78,27 +76,6 @@ export const loadLinks = async (url: string): Promise<ILink[]> => {
 }
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
-
-// export const loadAllLinks = async (baseUrl= 'https://db2.chess.cz', topDirUrlRelative = '/Uploads/Competitions/Files/'): Promise<ILink[]> => { 
-//     const topDirUrl = baseUrl + topDirUrlRelative;
-//     const topDirLinks = await loadLinks(topDirUrl);
-//     console.log("Top dir links loaded.", topDirLinks.length);
-//     let bottomDirLinks: ILink[] = [];
-
-//     const allLinks = topDirLinks.length;
-//     let processedLinks = 0;
-//     for(const topDirLink of topDirLinks) {
-//         console.log(`Processed ${processedLinks} out of ${allLinks}`);
-//         processedLinks++;
-
-//         const bottomlinks = await loadLinks(baseUrl + topDirLink.url);
-//         console.log("Chunk of bottom links loaded.", bottomlinks.length);
-//         bottomDirLinks = [...bottomDirLinks, ...bottomlinks]; 
-//         await sleep(1000);
-//     }
-//     console.log("All chunks loaded.");
-//     return bottomDirLinks;
-// }
 
 export async function* loadAllLinksByChunks(baseUrl= 'https://db2.chess.cz', topDirUrlRelative = '/Uploads/Competitions/Files/') { 
     const topDirUrl = baseUrl + topDirUrlRelative;
