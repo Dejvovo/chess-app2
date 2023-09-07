@@ -31,7 +31,7 @@ const Links = ()=>  {
 
     return <>
         <Button variant={'contained'} onClick={refreshLinksInDb}>Přegenerovat linky v DB</Button>
-        <Button variant={'contained'} onClick={callPushGamesFromLinksToDB}>Nasypat všechny linky do DB</Button>
+        <Button variant={'contained'} onClick={callPushGamesFromLinksToDB}>Nasypat všechny hry z linku do DB</Button>
         <br/>
         <Table size={'small'}>
             <TableHead>

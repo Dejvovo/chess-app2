@@ -107,29 +107,14 @@ export const parsePgnFile = (pgnFile: string): IPgn[] => {
         if (numberOfIterations > 1000) throw new Error(`Number of iterations exceeded. Restfile is: ${rest}`);
         if (rest === '' || rest.length === 0) break;
 
-        const regex = new RegExp('[\d]\.\ [^\ ]+\ [^\ ]+\ ', 'g');
+        const regex = new RegExp('((0-1)[^"]|(1-0)[^"]|(-1\/2)[^"]|0-1(\s)*$|1-0(\s)*$|-1\/2(\s)*$)', 'g');
         regex.test(rest);
 
         const startIdxOfMoves = regex.lastIndex;
-        if (startIdxOfMoves === 0) break;
-
-        const endResult1 = '1-0';
-        const endResult2 = '1/2-1/2';
-        const endResult3 = '0-1';
-
-        const possibleEndings = [
-            rest.indexOf(endResult1, startIdxOfMoves) + endResult1.length,
-            rest.indexOf(endResult2, startIdxOfMoves) + endResult2.length,
-            rest.indexOf(endResult3, startIdxOfMoves) + endResult3.length];
-
-        const existingEndings = possibleEndings.filter(idx => idx > 30);
-        if (existingEndings.length === 0) break;
-
-        const nextEnding = Math.min(...existingEndings);
-        const nextPgn = rest.substring(0, nextEnding).trim();
+        const nextPgn = rest.substring(0, startIdxOfMoves).trim();
 
         results.push(parseSinglePgn(nextPgn));
-        rest = rest.substring(nextEnding);
+        rest = rest.substring(startIdxOfMoves);
     }
 
     return results;
