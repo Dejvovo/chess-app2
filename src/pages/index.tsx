@@ -62,6 +62,7 @@ export default function Home() {
           columns={[whiteColumn, blackColumn, resultColumn, dateColumn, linkColumn]} 
           dataSource={data?.result}
           pagination={false}
+          size={'small'}
           >
           </Table>
         <Pagination total={data?.count} pageSize={paginationModel.pageSize}  current={paginationModel.page + 1} onChange={onPaginationChange}></Pagination>
