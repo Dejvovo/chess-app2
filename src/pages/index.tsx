@@ -7,8 +7,10 @@
 import { DataGrid, type GridFilterModel, type GridPaginationModel } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
-import {Table, Pagination, Layout, Form, Input, Button, Drawer, TableProps, theme} from 'antd';
+import {Table, Pagination, Layout, Form, Input, Button, Drawer, TableProps, theme, Menu, type MenuProps} from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
+import { PieChartOutlined, SearchOutlined } from '@ant-design/icons';
+
 
 
 const siderStyle: React.CSSProperties = {
@@ -47,20 +49,40 @@ export default function Home() {
     });
   };  
 
+  const FilterForm = () => <>
+  <div style={{padding: '0px 0px 10px 0px'}}>
+    <Form onFinish={onFormFinish} layout={'inline'}>
+      <Form.Item label={'Jméno hráče'} name={'name'}>
+        <Input />
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" icon={<SearchOutlined />} htmlType="submit"></Button>
+      </Form.Item>
+    </Form>
+    </div>
+  </>
+
+
+type MenuItem = Required<MenuProps>['items'][number];
+
+  const getItem = (label: React.ReactNode, key: React.Key, type?: 'group'): MenuItem => ({ key, label, type })
+
+
+
   return (
     <>
     <Layout>
       <Sider style={{ background: colorBgContainer }} width={'200px'}>
-        <Form onFinish={onFormFinish}>
-          <Form.Item label={'Jméno hráče'} name={'name'}>
-            <Input/>
-          </Form.Item>
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-      <Button type="primary" htmlType="submit"> Vyhledat</Button>
-    </Form.Item>
-        </Form>
+      <Menu
+        defaultSelectedKeys={['1']}
+        defaultOpenKeys={['sub1']}
+        mode="inline"
+        theme="dark"
+        items={[getItem('Přehled her', '1')]} //, getItem('Přehled týmů', '2')
+      />
       </Sider>
       <Content  style={{ padding: '20px', minHeight: 280 }}>
+        <FilterForm/>
         <Table 
           loading={isLoading}
           columns={[whiteColumn, blackColumn, resultColumn, dateColumn, linkColumn]} 

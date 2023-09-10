@@ -10,6 +10,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mliebelt/pgn-parser": "^1.4.12",
