@@ -7,7 +7,7 @@
 import { DataGrid, type GridFilterModel, type GridPaginationModel } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
-import {Table, Pagination, Layout, Form, Input, Button, Drawer, TableProps} from 'antd';
+import {Table, Pagination, Layout, Form, Input, Button, Drawer, TableProps, theme} from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 
 
@@ -35,6 +35,10 @@ export default function Home() {
   const dateColumn: TableColumn = {title: 'Datum', dataIndex: 'date', width: '15%', render: (_, data) => <>{data?.date?.toLocaleString()}</>};
   const linkColumn: TableColumn = {title: 'Přehrát', dataIndex: 'pgn', width: '15%', render: (_, data) =>  (<><Button disabled={data.result.length > 10} onClick={() => setActiveGame(data.pgn)}>Přehrát</Button></>) };
 
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
+
   const { data, isLoading } = api.db.infinitePgns.useQuery({pagination: paginationModel, filter: filterModel});
   const onPaginationChange = (page: number, pageSize: number) => setPaginationModel({page: page -1, pageSize}) 
   const onFormFinish = (data: {name: string}) => {
@@ -46,7 +50,7 @@ export default function Home() {
   return (
     <>
     <Layout>
-      <Sider style={siderStyle} width={'25%'}>
+      <Sider style={{ background: colorBgContainer }} width={'200px'}>
         <Form onFinish={onFormFinish}>
           <Form.Item label={'Jméno hráče'} name={'name'}>
             <Input/>
@@ -56,7 +60,7 @@ export default function Home() {
     </Form.Item>
         </Form>
       </Sider>
-      <Content>
+      <Content  style={{ padding: '20px', minHeight: 280 }}>
         <Table 
           loading={isLoading}
           columns={[whiteColumn, blackColumn, resultColumn, dateColumn, linkColumn]} 
