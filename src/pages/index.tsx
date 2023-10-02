@@ -22,10 +22,10 @@ import {
   Empty, Skeleton
 } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
-import {Mobile} from "~/pages/Mobile";
-import {FilterForm} from "~/pages/components/FilterForm";
-import {LoadingCenter} from "~/pages/components/LoadingCenter";
-import {LoadingSkeleton} from "~/pages/components/LoadingSkeleton";
+import {Mobile} from "~/components/Mobile";
+import {FilterForm} from "~/components/FilterForm";
+import {LoadingCenter} from "~/components/LoadingCenter";
+import {LoadingSkeleton} from "~/components/LoadingSkeleton";
 
 
 
