@@ -7,9 +7,25 @@
 import { DataGrid, type GridFilterModel, type GridPaginationModel } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
-import {Table, Pagination, Layout, Form, Input, Button, Drawer, TableProps, theme, Menu, type MenuProps} from 'antd';
+import {
+  Table,
+  Pagination,
+  Layout,
+  Form,
+  Input,
+  Button,
+  Drawer,
+  TableProps,
+  theme,
+  Menu,
+  type MenuProps,
+  Empty, Skeleton
+} from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
-import { PieChartOutlined, SearchOutlined } from '@ant-design/icons';
+import {Mobile} from "~/components/Mobile";
+import {FilterForm} from "~/components/FilterForm";
+import {LoadingCenter} from "~/components/LoadingCenter";
+import {LoadingSkeleton} from "~/components/LoadingSkeleton";
 
 
 
@@ -29,6 +45,14 @@ export default function Home() {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 10});
   const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
   const [activeGame, setActiveGame] = useState<string | undefined>(undefined);
+  const [isMobile, setMobile] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
+  useEffect(() => {
+    if(window.innerWidth < 700){
+      setMobile(true);
+    }
+    setPageLoading(false);
+  }, [])
 
   type TableColumn = { dataIndex: string, title: string, width?: string, render?: (_: any, data: any) => React.JSX.Element };
   const whiteColumn: TableColumn = {title: 'Bílý', dataIndex: 'white', width: '20%'};
@@ -47,27 +71,32 @@ export default function Home() {
     setFilterModel((_) => {
       return {items: [{field: 'white', value: data.name, operator: 'OR' }, {field: 'black', value: data.name, operator: 'OR' }]} 
     });
-  };  
-
-  const FilterForm = () => <>
-  <div style={{padding: '0px 0px 10px 0px'}}>
-    <Form onFinish={onFormFinish} layout={'inline'}>
-      <Form.Item label={'Jméno hráče'} name={'name'}>
-        <Input />
-      </Form.Item>
-      <Form.Item>
-        <Button type="primary" icon={<SearchOutlined />} htmlType="submit"></Button>
-      </Form.Item>
-    </Form>
-    </div>
-  </>
+  };
 
 
 type MenuItem = Required<MenuProps>['items'][number];
 
   const getItem = (label: React.ReactNode, key: React.Key, type?: 'group'): MenuItem => ({ key, label, type })
 
+  if(pageLoading){
+    return <LoadingCenter/>
+  }
 
+  if(isMobile){
+    return (
+        <div>
+      {isLoading
+          ? <div style={{textAlign: "center", marginTop: '10px'}}>
+              <Skeleton.Input active/>
+              <LoadingSkeleton/>
+            </div>
+          : <Mobile onFormFinish={onFormFinish} data={data?.result ??  []}/>}
+      {!!data?.count
+          ? <div style={{position: "fixed", bottom: 0, backgroundColor: "white", width: '100vw', padding: '10px 0', textAlign: 'center'}}><Pagination size={'small'} total={data?.count} pageSize={paginationModel.pageSize}  current={paginationModel.page + 1} onChange={onPaginationChange}></Pagination></div>
+          : <Empty/>
+      }
+    </div>)
+  }
 
   return (
     <>
@@ -82,7 +111,7 @@ type MenuItem = Required<MenuProps>['items'][number];
       />
       </Sider>
       <Content  style={{ padding: '20px', minHeight: 280 }}>
-        <FilterForm/>
+        <FilterForm onFormFinish={onFormFinish} />
         <Table 
           loading={isLoading}
           columns={[whiteColumn, blackColumn, resultColumn, dateColumn, linkColumn]} 
