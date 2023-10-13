@@ -26,6 +26,36 @@ import {LoadingSkeleton} from "~/components/LoadingSkeleton";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { ChessBaseIframe } from "~/components/ChessBaseIframe";
 
+const removeAllCommas = (text: string) => text.replace(/,/g, " ");
+const createFieldsForValue = (name: string) => [{field: 'white', value: name, operator: 'OR' }, {field: 'black', value: name, operator: 'OR' }]
+
+// TODO move to backend
+const getFullnameVariations = (fullname: string) => {
+  // Currently there is a problem in DB data. 
+  // The same player can be stored in many ways: 'Jan Novak' = 'Jan, Novak' = 'Jan,Novak' = 'Novak, Jan'
+  
+  // User who writes full name in the form wants to see ALL of those variations. 
+  // So 'Novak Jan' input, must be transformed into all variations above. 
+
+  const [first, last] = removeAllCommas(fullname).split(' ');
+  
+  if(!first) return [];
+
+  // Only single name is inserted, no variations created.
+  if(!last) {
+    return createFieldsForValue(first || '');
+  }
+
+  let variations: any[] = [];
+  variations = [...variations, ...createFieldsForValue(`${first} ${last}`)];
+  variations = [...variations, ...createFieldsForValue(`${first},${last}`)];
+  variations = [...variations, ...createFieldsForValue(`${first}, ${last}`)];
+
+  variations = [...variations, ...createFieldsForValue(`${last} ${first}`)];
+  variations = [...variations, ...createFieldsForValue(`${last},${first}`)];
+  variations = [...variations, ...createFieldsForValue(`${last}, ${first}`)];
+  return variations;
+}
 
 export default function Home() {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 10});
@@ -34,8 +64,6 @@ export default function Home() {
   const [isMobile, setMobile] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const size = useWindowSize();
-
-  console.warn('size is ', size);
 
   useEffect(() => {
     setMobile(size.width ? size.width < 700 : true);
@@ -57,7 +85,7 @@ export default function Home() {
   const onPaginationChange = (page: number, pageSize: number) => setPaginationModel({page: page -1, pageSize}) 
   const onFormFinish = (data: {name: string}) => {
     setFilterModel((_) => {
-      return {items: [{field: 'white', value: data.name, operator: 'OR' }, {field: 'black', value: data.name, operator: 'OR' }]} 
+      return {items:  getFullnameVariations(data.name)} 
     });
   };
 
