@@ -1,5 +1,5 @@
 export const ChessBaseIframe = ({activeGame} : {activeGame: string}) => <iframe title={"ad"}
-style={{ width: '100%', height: '100%', minHeight: '500px' }}
+style={{ width: '100%', height: '100%', minHeight: '1000px' }}
 srcDoc={gameIframe(activeGame)}></iframe> 
 
 const gameIframe = (pgn?: string ) => `<html><head>   <link rel="stylesheet" type="text/css" href="https://pgn.chessbase.com/CBReplay.css" />
