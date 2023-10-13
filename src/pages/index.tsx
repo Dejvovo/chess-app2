@@ -4,39 +4,27 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { DataGrid, type GridFilterModel, type GridPaginationModel } from "@mui/x-data-grid";
+import { type GridFilterModel, type GridPaginationModel } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import {
   Table,
   Pagination,
   Layout,
-  Form,
-  Input,
   Button,
   Drawer,
-  TableProps,
   theme,
   Menu,
   type MenuProps,
   Empty, Skeleton
 } from 'antd';
-const { Header, Footer, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 import {Mobile} from "~/components/Mobile";
 import {FilterForm} from "~/components/FilterForm";
 import {LoadingCenter} from "~/components/LoadingCenter";
 import {LoadingSkeleton} from "~/components/LoadingSkeleton";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { ChessBaseIframe } from "~/components/ChessBaseIframe";
-
-
-
-const siderStyle: React.CSSProperties = {
-  textAlign: 'center',
-  lineHeight: '120px',
-  color: '#000',
-  backgroundColor: '#fff',
-};
 
 
 export default function Home() {
@@ -50,7 +38,6 @@ export default function Home() {
   console.warn('size is ', size);
 
   useEffect(() => {
-    console.log('size is ', size);
     setMobile(size.width ? size.width < 700 : true);
     setPageLoading(false);
   }, [size])
