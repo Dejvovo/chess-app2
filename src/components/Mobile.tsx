@@ -1,6 +1,8 @@
 import {FilterFormMobile} from "~/components/FilterFormMobile";
 import {CalendarOutlined} from "@ant-design/icons";
 import {blue} from "@ant-design/colors";
+import { ChessBaseIframe } from "./ChessBaseIframe";
+import { useState } from "react";
 
 interface IGame {
     id: number;
@@ -19,6 +21,8 @@ interface IProps {
 }
 
 const Game = ({game}: {game: IGame}) => {
+    const [activeGame, setActiveGame] = useState<string | undefined | null>(undefined);
+
     return (
         <div style={{padding: '9px', borderRadius: '8px', backgroundColor: '#EFEFEF', borderBottom: `3px solid ${blue[5] ?? 'blue'}`, margin: '10px 0'}}>
             <div style={{display: "grid", gridTemplateColumns: '3fr 2fr 3fr', height: 'min-content' , justifyContent: "space-between"}}>
@@ -28,11 +32,11 @@ const Game = ({game}: {game: IGame}) => {
             </div>
             <div style={{display: "flex", justifyContent: 'space-between', padding: '10px 0 0 0'}}>
                 <div style={{marginTop: 'auto', paddingBottom: '2px'}}><CalendarOutlined/> {game.date?.toLocaleDateString()}</div>
-                <button style={{padding: '6px 10px', borderRadius: '8px', backgroundColor: 'white', border: '0px'}}>Přehrát</button>
+                <button style={{padding: '6px 10px', borderRadius: '8px', backgroundColor: 'white', border: '0px'}} onClick={() => setActiveGame(activeGame ? undefined : game.pgn)}>{activeGame ? 'Zavřít' : 'Přehrát'}</button>
             </div>
+            {activeGame && <ChessBaseIframe activeGame={activeGame}></ChessBaseIframe>}
         </div>
-    )
-
+)
 }
 
 

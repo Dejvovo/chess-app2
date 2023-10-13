@@ -26,6 +26,8 @@ import {Mobile} from "~/components/Mobile";
 import {FilterForm} from "~/components/FilterForm";
 import {LoadingCenter} from "~/components/LoadingCenter";
 import {LoadingSkeleton} from "~/components/LoadingSkeleton";
+import { useWindowSize } from "@uidotdev/usehooks";
+import { ChessBaseIframe } from "~/components/ChessBaseIframe";
 
 
 
@@ -36,10 +38,6 @@ const siderStyle: React.CSSProperties = {
   backgroundColor: '#fff',
 };
 
-const gameIframe = (pgn?: string ) => `<html><head>   <link rel="stylesheet" type="text/css" href="https://pgn.chessbase.com/CBReplay.css" />
-<script src="https://pgn.chessbase.com/jquery-3.0.0.min.js"></script>
-<script src="https://pgn.chessbase.com/cbreplay.js" type="text/javascript"></script>
-</head><body><div class="cbreplay">${pgn || ''}</div></body></html>`;
 
 export default function Home() {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 10});
@@ -47,12 +45,15 @@ export default function Home() {
   const [activeGame, setActiveGame] = useState<string | undefined>(undefined);
   const [isMobile, setMobile] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
+  const size = useWindowSize();
+
+  console.warn('size is ', size);
+
   useEffect(() => {
-    if(window.innerWidth < 700){
-      setMobile(true);
-    }
+    console.log('size is ', size);
+    setMobile(size.width ? size.width < 700 : true);
     setPageLoading(false);
-  }, [])
+  }, [size])
 
   type TableColumn = { dataIndex: string, title: string, width?: string, render?: (_: any, data: any) => React.JSX.Element };
   const whiteColumn: TableColumn = {title: 'Bílý', dataIndex: 'white', width: '20%'};
@@ -123,9 +124,7 @@ type MenuItem = Required<MenuProps>['items'][number];
         <Pagination total={data?.count} pageSize={paginationModel.pageSize}  current={paginationModel.page + 1} onChange={onPaginationChange}></Pagination>
 
         <Drawer placement="right" open={activeGame !== undefined} closable={true} onClose={() => setActiveGame(undefined)} width={'80%'}>
-        <iframe title={"ad"}
-                style={{ width: '100%', height: '100%' }}
-                srcDoc={gameIframe(activeGame)}></iframe> 
+        {activeGame && <ChessBaseIframe activeGame={activeGame}></ChessBaseIframe>}
         </Drawer>
       </Content>
     </Layout>
