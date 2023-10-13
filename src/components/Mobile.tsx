@@ -13,6 +13,8 @@ interface IGame {
     whiteElo: number|null;
     blackElo: number|null;
     pgn: string|null;
+    site: string|null;
+    event: string|null;
 }
 
 interface IProps {
@@ -22,16 +24,18 @@ interface IProps {
 
 const Game = ({game}: {game: IGame}) => {
     const [activeGame, setActiveGame] = useState<string | undefined | null>(undefined);
-
+    console.log(activeGame);
     return (
         <div style={{padding: '9px', borderRadius: '8px', backgroundColor: '#EFEFEF', borderBottom: `3px solid ${blue[5] ?? 'blue'}`, margin: '10px 0'}}>
             <div style={{display: "grid", gridTemplateColumns: '3fr 2fr 3fr', height: 'min-content' , justifyContent: "space-between"}}>
-                <div style={{fontWeight: 'bold'}}>{game.white}</div>
+                <div style={{fontWeight: 'bold'}}><div>{game.white}</div><div>{game.whiteElo}</div></div>
                 <div style={{textAlign: 'center', backgroundColor: blue[1], margin: 'auto 4px', borderRadius: '5px', padding: '8px 4px'}}>{game.result}</div>
-                <div style={{textAlign: 'right', fontWeight: 'bold'}}>{game.black}</div>
+                <div style={{textAlign: 'right', fontWeight: 'bold'}}><div>{game.black}</div><div>{game.blackElo}</div></div>
             </div>
             <div style={{display: "flex", justifyContent: 'space-between', padding: '10px 0 0 0'}}>
                 <div style={{marginTop: 'auto', paddingBottom: '2px'}}><CalendarOutlined/> {game.date?.toLocaleDateString()}</div>
+                <div style={{marginTop: 'auto', paddingBottom: '2px'}}> {game.event}</div>
+                
                 <button style={{padding: '6px 10px', borderRadius: '8px', backgroundColor: 'white', border: '0px'}} onClick={() => setActiveGame(activeGame ? undefined : game.pgn)}>{activeGame ? 'Zavřít' : 'Přehrát'}</button>
             </div>
             {activeGame && <ChessBaseIframe activeGame={activeGame}></ChessBaseIframe>}
