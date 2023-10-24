@@ -84,7 +84,7 @@ export default function Home() {
   const { data, isLoading } = api.db.infinitePgns.useQuery({pagination: paginationModel, filter: filterModel});
   const onPaginationChange = (page: number, pageSize: number) => setPaginationModel({page: page -1, pageSize}) 
   const onFormFinish = (data: {name: string}) => {
-    setFilterModel((_) => {
+    setFilterModel((_: any) => {
       return {items:  getFullnameVariations(data.name)} 
     });
   };
