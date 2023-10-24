@@ -37,8 +37,8 @@ const getFullnameVariations = (fullname: string) => {
   // User who writes full name in the form wants to see ALL of those variations. 
   // So 'Novak Jan' input, must be transformed into all variations above. 
 
-  const [first, last] = removeAllCommas(fullname).split(' ');
-  
+  const [first, last] = removeAllCommas(fullname).split(' ').filter(el => el);
+  console.log(removeAllCommas(fullname), 'XXX')
   if(!first) return [];
 
   // Only single name is inserted, no variations created.
