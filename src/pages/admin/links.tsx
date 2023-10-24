@@ -4,17 +4,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { Button, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
-import LoadingButton from '@mui/lab/LoadingButton';
+import { Button, Table } from 'antd';
 import { useSnackbar } from "notistack";
 import { api } from "~/utils/api";
 
-const defaultColumns = (objects: object[]) => objects[0] ? Object.keys(objects[0]).map(key => ({field: key})) : [];
-
 const Links = ()=>  {
     const { enqueueSnackbar } = useSnackbar();
-    const refreshAllLinks = api.chesscz.refreshAllLinks.useQuery(undefined, {enabled: false});
-    const refreshAllGroups = api.chesscz.refreshAllGroups.useQuery(undefined, {enabled: false});
+    const refreshAllLinks = api.chesscz.refreshAllLinks.useQuery(undefined);
+    const refreshAllGroups = api.chesscz.refreshAllGroups.useQuery(undefined);
 
     const pushGamesFromLinksToDB = api.chesscz.pushGamesFromLinksToDB.useMutation();
     const saveGamesFromUrl = api.chesscz.saveGamesFromUrl.useMutation();
@@ -38,40 +35,16 @@ const Links = ()=>  {
     const links = api.chesscz.links.useQuery().data || [];
 
     return <>
-        <Button variant={'contained'} onClick={refreshLinksInDb}>Přegenerovat linky v DB</Button>
-        <Button variant={'contained'} onClick={callPushGamesFromLinksToDB}>Nasypat všechny hry z linku do DB</Button>
-        <Button variant={'contained'} onClick={refreshGroupsInDb}>Přegenerovat oddíly v DB</Button>
+        <Button onClick={refreshLinksInDb}>Přegenerovat linky v DB</Button>
+        <Button onClick={callPushGamesFromLinksToDB}>Nasypat všechny hry z linku do DB</Button>
+        <Button onClick={refreshGroupsInDb}>Přegenerovat oddíly v DB</Button>
 
         <br/>
-        <Table size={'small'}>
-            <TableHead>
-                <TableRow>
-                    <TableCell>
-                        Zdrojová URL
-                    </TableCell>
-                    <TableCell>
-                        Jsou hry správně naparsované?
-                    </TableCell>
-                    <TableCell></TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {links.map(link => ( 
-                <TableRow key={link.url}>
-                    <TableCell>
+                        {/* Zdrojová URL| Jsou hry správně naparsované? */}
+                {/* {links.map(link => ( 
                         {link.url}
-                    </TableCell>
-                    <TableCell>
-                        {link.isParsed ? 'ANO' : 'NE'}
-                    </TableCell>
-                    <TableCell>
-                        <LoadingButton  size={'small'} variant={'contained'} disabled={saveGamesFromUrl.isLoading} onClick={() => saveGamesFromUrl.mutate({url: link.url})}>Vložit do DB</LoadingButton>
-                    </TableCell>
-                </TableRow>))}
-            </TableBody>
-
-        </Table>
-    </>
+                        {link.isParsed ? 'ANO' : 'NE'}))} */}
+                    </>
 }
 
 

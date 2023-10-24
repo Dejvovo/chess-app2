@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { type GridFilterModel, type GridPaginationModel } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import {
@@ -58,8 +58,8 @@ const getFullnameVariations = (fullname: string) => {
 }
 
 export default function Home() {
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({page: 0, pageSize: 10});
-  const [filterModel, setFilterModel] = useState<GridFilterModel>({items: []});
+  const [paginationModel, setPaginationModel] = useState<any>({page: 0, pageSize: 10});
+  const [filterModel, setFilterModel] = useState<any>({items: []});
   const [activeGame, setActiveGame] = useState<string | undefined>(undefined);
   const [isMobile, setMobile] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
@@ -123,7 +123,7 @@ type MenuItem = Required<MenuProps>['items'][number];
         defaultOpenKeys={['sub1']}
         mode="inline"
         theme="dark"
-        items={[getItem('Přehled her', '1')]} //, getItem('Přehled týmů', '2')
+        items={[getItem('Přehled her', '1')]}
       />
       </Sider>
       <Content  style={{ padding: '20px', minHeight: 280 }}>
@@ -138,7 +138,7 @@ type MenuItem = Required<MenuProps>['items'][number];
           </Table>
         <Pagination total={data?.count} pageSize={paginationModel.pageSize}  current={paginationModel.page + 1} onChange={onPaginationChange}></Pagination>
 
-        <Drawer placement="right" open={activeGame !== undefined} closable={true} onClose={() => setActiveGame(undefined)} width={'80%'}>
+        <Drawer open={activeGame !== undefined} closable={true} onClose={() => setActiveGame(undefined)}>
         {activeGame && <ChessBaseIframe activeGame={activeGame}></ChessBaseIframe>}
         </Drawer>
       </Content>
