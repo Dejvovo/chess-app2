@@ -9,6 +9,7 @@ import {  loadAllLinksByChunks } from "~/utils/business/chessczLinkLoader";
 import { loadAllGroups } from "~/utils/business/groupsLoader";
 import { downloadPageOrFile } from "~/utils/business/pageDownloader";
 import { parsePgnFile } from "~/utils/business/pgnParser";
+import dayjs from 'dayjs';
 
 export const chessczRouter = createTRPCRouter({
   links: publicProcedure
@@ -23,7 +24,7 @@ export const chessczRouter = createTRPCRouter({
   refreshAllLinks: publicProcedure
     .query(async () => {
       for await(const linksChunk of loadAllLinksByChunks()) {
-        const pgnLinksOnly = linksChunk.filter(l => l.url.endsWith('pgn')).map(l => ({...l, url:l.url.trim()}));
+        const pgnLinksOnly = linksChunk.filter(l => l.url.endsWith('pgn')).map(l => ({ url:l.url.trim(), dateTime: dayjs(l.date, "D. MM. YYYY H:m")}))
         try{
           await prisma.link.createMany({data: pgnLinksOnly, skipDuplicates: true});
         } catch(e) {
