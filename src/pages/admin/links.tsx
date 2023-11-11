@@ -39,8 +39,7 @@ const Links = ()=>  {
             <Drawer open={drawer === "intervalLinks"} closable={true} onClose={() => setDrawer(undefined)}>
                 <Form onFinish={handleStoreGamesFromLinks}>
                     <Form.Item name={"interval"}>
-                        <DatePicker.RangePicker>
-                        </DatePicker.RangePicker>
+                        <DatePicker.RangePicker/>
                     </Form.Item>
                     <Button htmlType='submit'>Potvrdit</Button>
                 </Form>
