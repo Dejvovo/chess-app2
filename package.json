@@ -50,13 +50,13 @@
     "eslint-config-next": "^13.4.2",
     "prisma": "^4.14.0",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4"  
   },
   "ct3aMetadata": {
     "initVersion": "7.14.1"
   },
   "volta": {
     "node": "16.14.2",
-    "yarn": "3.2.0"
+    "yarn": "1.22.17"
   }
 }

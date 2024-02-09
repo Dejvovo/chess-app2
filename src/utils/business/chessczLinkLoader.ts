@@ -61,7 +61,7 @@ export const loadLinks = async (url: string): Promise<ILink[]> => {
     const linksParsed = parse(innerHTML).querySelectorAll('a');
 
     const result = linksParsed.filter(link => !!link.previousSibling).map(linkParsed => {
-        const linksDate = linkParsed.previousSibling.innerText; 
+        const linksDate = linkParsed?.previousSibling?.innerText; 
         const trimedDate = linksDate.trim().split(' ').filter(s => s !== "").join(' ');
 
         const linksHref = linkParsed.attributes['href'] || '';
